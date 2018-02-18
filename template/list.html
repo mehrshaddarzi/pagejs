@@ -1,0 +1,13 @@
+<script id="list-template" type="text/html">
+    <div class="item">
+        <h1>Upcoming Shows</h1>
+        {{#shows}}
+        <ul>
+            <li><strong>Title:</strong> {{title}}</li>
+            <li><strong>Description:</strong> {{{description}}}</li>
+            <li><strong>Video:</strong> {{video}}</li>
+            <li><strong>Category:</strong> {{category}}</li>
+        </ul>
+        {{/shows}}
+    </div>
+</script>

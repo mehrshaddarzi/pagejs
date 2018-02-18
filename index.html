@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+</head>
+<body>
+
+<ul>
+    <li><a href="http://app.local/article/ali">articel</a></li>
+    <li><a href="http://app.local/">home</a></li>
+    <li><a href=""></a></li>
+    <li><a href=""></a></li>
+</ul>
+
+<div id="app"></div>
+
+
+
+<!-- Load Scrip -->
+    <script src="http://app.local/js/jquery/jquery-3.2.1.min.js"></script>
+    <script src="http://app.local/js/pagejs/page.min.js"></script>
+    <script src="http://app.local/js/jquery-cookie/js.cookie.min.js"></script>
+    <script src="http://app.local/js/mustache/mustache.min.js"></script>
+    <script>
+        jQuery(document).ready(function($){
+            var app = $("#app");
+            var namespace = 'realwp';
+            var url = 'http://app.local';
+            var template_url = url + '/template/';
+            var product_type = 'dev'; //for not loadded template from cookie dev|pro (developer|product)
+            var expire_cookie = 30;
+
+
+
+
+            function view(filename, json, place = app){
+                var cookie_name = namespace + '-' + filename + '-template';
+                if(Cookies.get(cookie_name) ==undefined) {
+                    //alert('cookie created');
+                    $.get(template_url + filename + '.html', function(templates) {
+                        var template = $(templates).filter('#' + filename + '-template').html();
+                        place.html(Mustache.render(template, json));
+                        if(product_type !='dev') { Cookies.set(cookie_name, template, { expires: expire_cookie }); } else { Cookies.remove(cookie_name); }
+                    });
+                } else {
+                    //alert('from cookie loaded');
+                    place.html(Mustache.render(Cookies.get(cookie_name), json));
+                }
+            }
+
+
+            var shows = { "shows" : [
+                { "category" : "children",
+                    "description" : "<a href='#'>A show</a> about a cake",
+                    "title" : "Strawberry Shortcake",
+                    "video" : "none"
+                },
+                { "category" : "children",
+                    "description" : "A show about a ice",
+                    "title" : "Vanilla Ice",
+                    "video" : "none"
+                }
+            ] };
+
+
+            //start routing System
+            page('/', index)
+            page('/article/:name', article)
+            page('*', notfound)
+            page()
+
+            function index(){
+                alert('index');
+                view('list', shows);
+            }
+
+            function notfound(){
+                view('404', {'title' : 'Not Found'});
+            }
+
+            function article(){
+                alert('single');
+                view('single', {'title' : 'artice'});
+            }
+
+        });
+    </script>
+
+
+</body>
+</html>
